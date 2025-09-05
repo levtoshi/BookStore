@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="BookStoreUI.Views.DashboardViews.SellBookView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreUI.Views.DashboardViews">
+    <Grid Height="325" Width="250" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="1.4*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0">Amount:</TextBlock>
+        <TextBox Grid.Row="1" Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <TextBlock Grid.Row="2">Date and time:</TextBlock>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <DatePicker Grid.Column="0" Margin="10,0,10,25" SelectedDate="{Binding SaleDate, UpdateSourceTrigger=PropertyChanged}"></DatePicker>
+            <Button Grid.Column="1" Background="YellowGreen" Padding="25,0" FontSize="18" Margin="10,0,10,25" Command="{Binding SetSaleDateToNowCommand}">Now</Button>
+        </Grid>
+
+        <Button Grid.Row="4" Margin="10,15,10,0" Command="{Binding SubmitCommand}">Sell book</Button>
+    </Grid>
+</UserControl>

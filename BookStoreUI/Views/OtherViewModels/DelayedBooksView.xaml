@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="BookStoreUI.Views.OtherViews.DelayedBooksView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreUI.Views.OtherViews" xmlns:converters="clr-namespace:BookStoreUI.Converters" xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"></converters:InverseBooleanToVisibilityConverter>
+    </UserControl.Resources>
+    <Grid Height="600" Width="1100" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="50" Command="{Binding GoToPreviousViewCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Polygon Fill="White" Points="20,5 20,30 0,18"></Polygon>
+                <TextBlock Margin="15,0,0,0" FontSize="24" Foreground="White" FontWeight="SemiBold">Back</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.1*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="10">
+                <custom:LoadingSpinner Diameter="100"
+                       IsLoading="{Binding IsLoading}"
+                       Thickness="5"
+                       Color="Black"></custom:LoadingSpinner>
+
+                <Grid Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+
+                    <TextBlock Foreground="Red"
+               Text="{Binding ErrorMessage}"
+               Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}"></TextBlock>
+
+                    <Grid Visibility="{Binding HasErrorMessage, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+
+                        <TextBlock Text="No delays have been made." Visibility="{Binding HasDelays, Converter={StaticResource InverseBooleanToVisibilityConverter}}"></TextBlock>
+
+                        <ListView ItemsSource="{Binding Delays}" SelectedItem="{Binding SelectedDelay, Mode=TwoWay}" Visibility="{Binding HasDelays, Converter={StaticResource BooleanToVisibilityConverter}}" FontSize="16">
+                            <ListView.Resources>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="IsHitTestVisible" Value="False"></Setter>
+                                    <Setter Property="MinWidth" Value="115"></Setter>
+                                </Style>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="16"></Setter>
+                                    <Setter Property="Foreground" Value="Black"></Setter>
+                                    <Setter Property="FontWeight" Value="Normal"></Setter>
+                                    <Setter Property="TextAlignment" Value="Center"></Setter>
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Author Name" DisplayMemberBinding="{Binding AuthorFullName}"/>
+                                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Year}"/>
+                                    <GridViewColumn Header="Cust. Name" DisplayMemberBinding="{Binding CustomerFullName}"/>
+                                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding CustomerEmail}"/>
+                                    <GridViewColumn Header="Books Amount" DisplayMemberBinding="{Binding AmountOfBooksDelayed}"/>
+                                    <GridViewColumn Header="Total price" DisplayMemberBinding="{Binding TotalPrice}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <Button Grid.Column="1" VerticalAlignment="Center" Padding="0,15" Command="{Binding DeleteDelayCommand}">Delete delay</Button>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

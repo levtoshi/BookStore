@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="BookStoreUI.Views.DashboardViews.BookModelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreUI.Views.DashboardViews">
+    <Grid Height="450" Width="250" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="36" FontWeight="Bold">Book Model</TextBlock>
+        <Button Grid.Row="1" Command="{Binding AddNewBookCommand}" Content="Add new book"></Button>
+        <Button Grid.Row="2" Command="{Binding UpdateBookCommand}" Content="Update book"></Button>
+        <Button Grid.Row="3" Command="{Binding DeleteBookCommand}" Content="Delete book"></Button>
+        <Button Grid.Row="4" Command="{Binding AddDiscountCommand}" Content="Add discount"></Button>
+    </Grid>
+</UserControl>

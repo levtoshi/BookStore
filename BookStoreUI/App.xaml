@@ -1,0 +1,64 @@
+﻿<Application x:Class="BookStoreUI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BookStoreUI"
+             xmlns:viewsDashboard="clr-namespace:BookStoreUI.Views.DashboardViews"
+             xmlns:viewsAccount="clr-namespace:BookStoreUI.Views.AccountViews"
+             xmlns:viewsOthers="clr-namespace:BookStoreUI.Views.OtherViews"
+             xmlns:vmsDashboard="clr-namespace:BookStoreUI.ViewModels.DashboardViewModels"
+             xmlns:vmsAccount="clr-namespace:BookStoreUI.ViewModels.AccountViewModels"
+             xmlns:vmsOthers="clr-namespace:BookStoreUI.ViewModels.OtherViewModels">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type vmsDashboard:DashboardViewModel}">
+            <viewsDashboard:DashboardView></viewsDashboard:DashboardView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsDashboard:BookModelViewModel}">
+            <viewsDashboard:BookModelView></viewsDashboard:BookModelView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsDashboard:BookStockViewModel}">
+            <viewsDashboard:BookStockView></viewsDashboard:BookStockView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsDashboard:SearchBookViewModel}">
+            <viewsDashboard:SearchBookView></viewsDashboard:SearchBookView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsDashboard:BookStatisticViewModel}">
+            <viewsDashboard:BookStatisticView></viewsDashboard:BookStatisticView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsDashboard:ChangeBookStockViewModel}">
+            <viewsDashboard:ChangeBookStockView></viewsDashboard:ChangeBookStockView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsDashboard:SellBookViewModel}">
+            <viewsDashboard:SellBookView></viewsDashboard:SellBookView>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vmsAccount:LoginViewModel}">
+            <viewsAccount:LoginView></viewsAccount:LoginView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsAccount:AccountSettingsViewModel}">
+            <viewsAccount:AccountSettingsView></viewsAccount:AccountSettingsView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsAccount:RegiserAccountViewModel}">
+            <viewsAccount:RegisterAccountView></viewsAccount:RegisterAccountView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsAccount:ChangePasswordViewModel}">
+            <viewsAccount:ChangePasswordView></viewsAccount:ChangePasswordView>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vmsOthers:DelayedBooksViewModel}">
+            <viewsOthers:DelayedBooksView></viewsOthers:DelayedBooksView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsOthers:BookDiscountsViewModel}">
+            <viewsOthers:BookDiscountsView></viewsOthers:BookDiscountsView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsOthers:ChangeBookModelViewModel}">
+            <viewsOthers:ChangeBookModelView></viewsOthers:ChangeBookModelView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsOthers:AddDiscountViewModel}">
+            <viewsOthers:AddDiscountView></viewsOthers:AddDiscountView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vmsOthers:AddDelayViewModel}">
+            <viewsOthers:AddDelayView></viewsOthers:AddDelayView>
+        </DataTemplate>
+
+    </Application.Resources>
+</Application>

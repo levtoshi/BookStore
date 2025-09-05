@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="BookStoreUI.Views.DashboardViews.ChangeBookStockView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreUI.Views.DashboardViews" xmlns:converters="clr-namespace:BookStoreUI.Converters">
+    <UserControl.Resources>
+        <converters:BooleanToBookStockButtonText x:Key="BooleanToBookStockButtonText"></converters:BooleanToBookStockButtonText>
+    </UserControl.Resources>
+    <Grid Height="200" Width="250" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="1.5*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0">Amount:</TextBlock>
+        <TextBox Grid.Row="1" Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Button Grid.Row="2" Command="{Binding SubmitCommand}" Content="{Binding IsWriteOffMode, Converter={StaticResource BooleanToBookStockButtonText}}"></Button>
+    </Grid>
+</UserControl>

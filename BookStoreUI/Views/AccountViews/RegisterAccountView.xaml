@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="BookStoreUI.Views.AccountViews.RegisterAccountView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreUI.Views.AccountViews" xmlns:converters="clr-namespace:BookStoreUI.Converters" xmlns:helpers="clr-namespace:BookStoreUI.Helpers">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"></converters:InverseBooleanToVisibilityConverter>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"></converters:InverseBooleanConverter>
+    </UserControl.Resources>
+    <Grid Width="600" Height="525" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="1.4*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" FontSize="36">Sign up</TextBlock>
+
+        <TextBlock Grid.Row="2" Grid.Column="0">Name:</TextBlock>
+
+        <TextBlock Grid.Row="2" Grid.Column="1">Middle name:</TextBlock>
+
+        <TextBlock Grid.Row="2" Grid.Column="2">Last name:</TextBlock>
+
+        <TextBox Grid.Row="3" Grid.Column="0" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding MiddleName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+        <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+        <Grid Width="500" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" Grid.RowSpan="2">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Column="0" Grid.Row="0">Login:</TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="0">Password:</TextBlock>
+
+            <TextBox Grid.Column="0" Grid.Row="1" Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <Grid Grid.Column="1" Grid.Row="1">
+                <PasswordBox
+        Visibility="{Binding IsPasswordShown, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+        helpers:PasswordBoxHelper.BindPassword="True"
+        helpers:PasswordBoxHelper.BoundPassword="{Binding Password, Mode=TwoWay}" Padding="3,3,37,3"></PasswordBox>
+                <TextBox Visibility="{Binding IsPasswordShown, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Padding="3,3,37,3"></TextBox>
+
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,30,25">
+
+                    <Button Background="Transparent" Margin="0" Foreground="Black" FontSize="14" Content="👁" Command="{Binding PasswordToVisibilityCommand}"></Button>
+
+                    <Polyline Points="5,5 30,30" StrokeThickness="2" Stroke="Black" Visibility="{Binding IsPasswordShown, Converter={StaticResource InverseBooleanToVisibilityConverter}}"></Polyline>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <RadioButton GroupName="ModeGroup" FontSize="20" VerticalContentAlignment="Center" IsChecked="{Binding IsAdmin, Mode=TwoWay}">Admin</RadioButton>
+            <RadioButton GroupName="ModeGroup" FontSize="20" VerticalContentAlignment="Center" Margin="30,0,0,0" IsChecked="{Binding IsAdmin, Mode=TwoWay, Converter={StaticResource InverseBooleanConverter}}">Seller</RadioButton>
+        </StackPanel>
+
+
+        <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Margin="100,15" Command="{Binding SubmitCommand}">Submit</Button>
+
+        <TextBlock Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3">
+            <TextBlock.Resources>
+                <Style TargetType="Hyperlink">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="DeepSkyBlue"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Resources>
+    <Hyperlink Command="{Binding NavigateToSignInCommand}">or Sign in</Hyperlink>
+        </TextBlock>
+    </Grid>
+</UserControl>

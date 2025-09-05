@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="BookStoreUI.Views.OtherViews.ChangeBookModelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreUI.Views.OtherViews" xmlns:converters="clr-namespace:BookStoreUI.Converters">
+    <UserControl.Resources>
+        <converters:BooleanToBookModelButtonText x:Key="BooleanToBookModelButtonText"></converters:BooleanToBookModelButtonText>
+    </UserControl.Resources>
+    <Grid Height="700" Width="800" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120" Height="50" Command="{Binding GoToPreviousViewCommand}">
+            <StackPanel Orientation="Horizontal">
+                <Polygon Fill="White" Points="20,5 20,30 0,18"></Polygon>
+                <TextBlock Margin="15,0,0,0" FontSize="24" Foreground="White" FontWeight="SemiBold">Back</TextBlock>
+            </StackPanel>
+        </Button>
+
+        <Grid Grid.Row="1" Margin="0,25,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="0.9*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="0.9*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="0.9*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="0.9*"></RowDefinition>
+                <RowDefinition Height="1.3*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0">Book name:</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1">Author name:</TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="2">Author mid name:</TextBlock>
+
+            <TextBox Grid.Row="1" Grid.Column="0" Text="{Binding BookName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding AuthorName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding AuthorMiddleName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+            <TextBlock Grid.Row="2" Grid.Column="0">Author last name:</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="1">Producer:</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="2">Pages:</TextBlock>
+
+            <TextBox Grid.Row="3" Grid.Column="0" Text="{Binding AuthorLastName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ProducerName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="3" Grid.Column="2" Text="{Binding AmountOfPages, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+            <TextBlock Grid.Row="4" Grid.Column="0">Genre:</TextBlock>
+            <TextBlock Grid.Row="4" Grid.Column="1">Year:</TextBlock>
+            <TextBlock Grid.Row="4" Grid.Column="2" FontSize="18">Continuation? (can be empty):</TextBlock>
+
+            <TextBox Grid.Row="5" Grid.Column="0" Text="{Binding Genre, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Year, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="5" Grid.Column="2" Text="{Binding IsContinuation, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+            <TextBlock Grid.Row="6" Grid.Column="0">Amount:</TextBlock>
+            <TextBlock Grid.Row="6" Grid.Column="1">Cost:</TextBlock>
+            <TextBlock Grid.Row="6" Grid.Column="2">Price:</TextBlock>
+
+            <TextBox Grid.Row="7" Grid.Column="0" IsReadOnly="{Binding IsUpdateMode}" Text="{Binding AmountInStock, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Cost, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Grid.Row="7" Grid.Column="2" Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" Margin="100,15" Content="{Binding IsUpdateMode, Converter={StaticResource BooleanToBookModelButtonText}}" Command="{Binding SubmitCommand}"></Button>
+        </Grid>
+    </Grid>
+</UserControl>

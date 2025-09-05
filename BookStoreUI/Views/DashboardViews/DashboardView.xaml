@@ -1,0 +1,104 @@
+﻿<UserControl x:Class="BookStoreUI.Views.DashboardViews.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookStoreUI.Views.DashboardViews" xmlns:converters="clr-namespace:BookStoreUI.Converters"  xmlns:custom="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"></converters:InverseBooleanToVisibilityConverter>
+    </UserControl.Resources>
+    <Grid Height="750" Width="1450" VerticalAlignment="Center" HorizontalAlignment="Center">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" MinHeight="100">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="Book Model" Command="{Binding NavigateToBookModelView}"></Button>
+            <Button Grid.Column="1" Content="Book Stock" Command="{Binding NavigateToBookStockView}"></Button>
+            <Button Grid.Column="2" Content="Search" Command="{Binding NavigateToSearchBookView}"></Button>
+            <Button Grid.Column="3" Content="Statistic" Command="{Binding NavigateToBookStatisticView}"></Button>
+            <Button Grid.Column="4" Content="Discounts" Command="{Binding NavigateToBookDiscountsView}"></Button>
+            <Button Grid.Column="5" Content="Delayed" Command="{Binding NavigateToDelayedBooksView}"></Button>
+            <Button Grid.Column="6" Content="Account" Command="{Binding NavigateToAccountSettingsView}"></Button>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="25">
+                <custom:LoadingSpinner
+                Diameter="100"
+                IsLoading="{Binding IsLoading}"
+                Thickness="5"
+                Color="Black"></custom:LoadingSpinner>
+
+                <Grid Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+
+                    <TextBlock
+                    Foreground="Red"
+                    Text="{Binding ErrorMessage}"
+                    Visibility="{Binding HasErrorMessage, Converter={StaticResource BooleanToVisibilityConverter}}"></TextBlock>
+
+                    <Grid Visibility="{Binding HasErrorMessage, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+
+                        <TextBlock Text="No reservations found." Visibility="{Binding HasBooks, Converter={StaticResource InverseBooleanToVisibilityConverter}}"></TextBlock>
+
+                        <ListView ItemsSource="{Binding Books}"
+          SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
+          Visibility="{Binding HasBooks, Converter={StaticResource BooleanToVisibilityConverter}}"
+          FontSize="16">
+                            <ListView.Resources>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="IsHitTestVisible" Value="False"></Setter>
+                                    <Setter Property="MinWidth" Value="115"></Setter>
+                                </Style>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="16"></Setter>
+                                    <Setter Property="Foreground" Value="Black"></Setter>
+                                    <Setter Property="FontWeight" Value="Normal"></Setter>
+                                    <Setter Property="TextAlignment" Value="Center"></Setter>
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Author Name" DisplayMemberBinding="{Binding AuthorFullName}"/>
+                                    <GridViewColumn Header="Producer" DisplayMemberBinding="{Binding ProducerName}"/>
+                                    <GridViewColumn Header="Pages" DisplayMemberBinding="{Binding PagesAmount}"/>
+                                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Genre}"/>
+                                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Year}"/>
+                                    <GridViewColumn Header="Continuation" DisplayMemberBinding="{Binding IsContinuation}"/>
+                                    <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding AmountInStock}"/>
+                                    <GridViewColumn Header="Cost" DisplayMemberBinding="{Binding Cost}"/>
+                                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <ContentControl Grid.Column="1" Content="{Binding CurrentRightPanel}"></ContentControl>
+        </Grid>
+    </Grid>
+</UserControl>
