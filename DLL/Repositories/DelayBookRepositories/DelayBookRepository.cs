@@ -1,30 +1,38 @@
 ﻿using DLL.Entities;
-using DLL.Interfaces;
-using DLL.Stores;
+using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repositories.DelayBookRepositories
 {
-    public class DelayBookRepository : IDelayBookRepository, ISetCollectionToDefaultRepository
+    public class DelayBookRepository : IDelayBookRepository
     {
         private readonly BookStoreContext _bookStoreContext;
-        private readonly ProductsStore _productsStore;
 
-        public DelayBookRepository(BookStoreContext bookStoreContext,
-            ProductsStore productsStore)
+        public DelayBookRepository(BookStoreContext bookStoreContext)
         {
             _bookStoreContext = bookStoreContext;
-            _productsStore = productsStore;
         }
 
-        public async Task SetToDefault()
+        public async Task<List<Product>> GetAllDelaysAsync()
         {
-            _productsStore.FilterFunc = p => p.DelayedForCustomer != null;
-            await _productsStore.SetToDefault();
+            return await _bookStoreContext.Products
+                .AsNoTracking()
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Author)
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Producer)
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Genre)
+                    .Include(p => p.DelayedForCustomer)
+                        .ThenInclude(d => d.Customer)
+                            .ThenInclude(c => c.FullName)
+                .Where(p => p.DelayedForCustomer != null)
+                .ToListAsync();
         }
 
         public async Task AddDelayAsync(int productId, Delay delay)
         {
-            Product? tempProduct = await _productsStore.FindElementAsync(productId);
+            Product? tempProduct = await _bookStoreContext.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
             if (tempProduct != null)
             {
                 if (tempProduct.DelayedForCustomer == null)
@@ -40,15 +48,26 @@ namespace DLL.Repositories.DelayBookRepositories
                 tempProduct.DelayedForCustomer.Amount = delay.Amount;
                 await _bookStoreContext.SaveChangesAsync();
             }
+            else
+            {
+                throw new Exception("There is no such product in database!");
+            }
         }
 
         public async Task RemoveDelayAsync(int productId)
         {
-            Product? tempProduct = await _productsStore.FindElementAsync(productId);
+            Product? tempProduct = await _bookStoreContext.Products
+                .Include(p => p.DelayedForCustomer)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
             if (tempProduct != null)
             {
                 tempProduct.DelayedForCustomer = null;
                 await _bookStoreContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("There is no such product in database!");
             }
         }
     }

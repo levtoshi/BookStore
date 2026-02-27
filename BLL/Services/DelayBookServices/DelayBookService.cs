@@ -1,11 +1,10 @@
 ﻿using BLL.DTOEntityMappers;
 using BLL.DTOs;
-using BLL.Interfaces;
 using DLL.Repositories.DelayBookRepositories;
 
 namespace BLL.Services.DelayBookServices
 {
-    public class DelayBookService : IDelayBookService, ISetCollectionToDefaultService
+    public class DelayBookService : IDelayBookService
     {
         private readonly IDelayBookRepository _delayBookRepository;
 
@@ -14,9 +13,11 @@ namespace BLL.Services.DelayBookServices
             _delayBookRepository = delayBookRepository;
         }
 
-        public async Task SetToDefault()
+        public async Task<List<ProductDTO>> GetAllDelaysAsync()
         {
-            await _delayBookRepository.SetToDefault();
+            return (await _delayBookRepository.GetAllDelaysAsync())
+                .Select(d => ProductMapper.ToDTO(d))
+                .ToList();
         }
 
         public async Task AddDelayAsync(int productId, DelayDTO delay)

@@ -17,7 +17,6 @@ namespace BookStoreUI.ViewModelDTOMappers
                 UserId = userDTO.Id,
                 IsAdmin = userDTO.IsAdmin,
                 Login = userDTO.SignInInfo.Login,
-                Password = userDTO.SignInInfo.Password,
                 Name = userDTO.UserFullName.Name,
                 MiddleName = userDTO.UserFullName.MiddleName,
                 LastName = userDTO.UserFullName.LastName
@@ -32,8 +31,7 @@ namespace BookStoreUI.ViewModelDTOMappers
                 IsAdmin = userViewModel.IsAdmin,
                 SignInInfo = new UserSignInInfoDTO()
                 {
-                    Login = userViewModel.Login,
-                    Password = userViewModel.Password
+                    Login = userViewModel.Login
                 },
                 UserFullName = new FullNameDTO()
                 {

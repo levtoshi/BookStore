@@ -1,11 +1,11 @@
 ﻿using BLL.DTOs;
 using BLL.Services.BookDiscountServices;
 using BookStoreUI.Commands.BaseCommands;
-using BookStoreUI.Interfaces;
 using BookStoreUI.Navigation.Services.MainNavigationServices;
 using BookStoreUI.Stores;
 using BookStoreUI.ViewModels.DashboardViewModels;
 using BookStoreUI.ViewModels.OtherViewModels;
+using System.Windows;
 
 namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
 {
@@ -45,16 +45,23 @@ namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _bookDiscountService.AddDiscountAsync(_selectedItemStore.SelectedProduct.ProductId,
-                new DiscountDTO()
-                {
-                    Name = _addDiscountViewModel.DiscountName,
-                    Interest = _addDiscountViewModel.Interest,
-                    StartDate = _addDiscountViewModel.StartDate,
-                    EndDate = _addDiscountViewModel.EndDate
-                });
-            _selectedItemStore.SelectedProduct = null;
-            _navigationService.Navigate();
+            try
+            {
+                await _bookDiscountService.AddDiscountAsync(_selectedItemStore.SelectedProduct.ProductId,
+                    new DiscountDTO()
+                    {
+                        Name = _addDiscountViewModel.DiscountName,
+                        Interest = _addDiscountViewModel.Interest,
+                        StartDate = _addDiscountViewModel.StartDate,
+                        EndDate = _addDiscountViewModel.EndDate
+                    });
+                _selectedItemStore.SelectedProduct = null;
+                _navigationService.Navigate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error adding discount: {ex.Message}", "Error", MessageBoxButton.OK);
+            }
         }
 
         public void Dispose()

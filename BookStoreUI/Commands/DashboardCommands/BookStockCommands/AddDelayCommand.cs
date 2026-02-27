@@ -6,6 +6,7 @@ using BookStoreUI.Stores;
 using BookStoreUI.ViewModels.CollectionViewModels;
 using BookStoreUI.ViewModels.DashboardViewModels;
 using BookStoreUI.ViewModels.OtherViewModels;
+using System.Windows;
 
 namespace BookStoreUI.Commands.DashboardCommands.BookStockCommands
 {
@@ -44,7 +45,9 @@ namespace BookStoreUI.Commands.DashboardCommands.BookStockCommands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _delayBookService.AddDelayAsync(_selectedProduct.ProductId,
+            try
+            {
+                await _delayBookService.AddDelayAsync(_selectedProduct.ProductId,
                 new DelayDTO()
                 {
                     Amount = _addDelayViewModel.Amount,
@@ -59,7 +62,12 @@ namespace BookStoreUI.Commands.DashboardCommands.BookStockCommands
                         Email = _addDelayViewModel.Email
                     }
                 });
-            _navigationService.Navigate();
+                _navigationService.Navigate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error adding delay: {ex.Message}", "Error", MessageBoxButton.OK);
+            }
         }
 
         public void Dispose()

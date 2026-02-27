@@ -4,7 +4,7 @@ namespace DLL.Repositories.BookDiscountRepositories
 {
     public interface IBookDiscountRepository
     {
-        Task SetToDefault();
+        Task<List<Product>> GetAllDiscountsAsync();
         Task AddDiscountAsync(int productId, Discount discount);
         Task RemoveDiscountAsync(int productId);
     }

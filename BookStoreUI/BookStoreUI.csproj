@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="HostBuilders\" />
     <Folder Include="Resources\Images\" />
   </ItemGroup>
 

@@ -1,11 +1,10 @@
 ﻿using BLL.DTOEntityMappers;
 using BLL.DTOs;
-using BLL.Interfaces;
 using DLL.Repositories.BookDiscountRepositories;
 
 namespace BLL.Services.BookDiscountServices
 {
-    public class BookDiscountService : IBookDiscountService, ISetCollectionToDefaultService
+    public class BookDiscountService : IBookDiscountService
     {
         private readonly IBookDiscountRepository _bookDiscountRepository;
 
@@ -14,9 +13,11 @@ namespace BLL.Services.BookDiscountServices
             _bookDiscountRepository = bookDiscountRepository;
         }
 
-        public async Task SetToDefault()
+        public async Task<List<ProductDTO>> GetAllDiscountsAsync()
         {
-            await _bookDiscountRepository.SetToDefault();
+            return (await _bookDiscountRepository.GetAllDiscountsAsync())
+                .Select(d => ProductMapper.ToDTO(d))
+                .ToList();
         }
 
         public async Task AddDiscountAsync(int productId, DiscountDTO discount)

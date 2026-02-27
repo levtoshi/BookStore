@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace BookStoreUI.Commands.AccountSettingsCommands
 {
-    public class SignUpCommand : AsyncCommandBase
+    public class SignUpCommand : AsyncCommandBase, IDisposable
     {
         private readonly RegiserAccountViewModel _regiserAccountViewModel;
         private readonly IMainNavigationService<DashboardViewModel> _navigationService;
@@ -63,7 +63,7 @@ namespace BookStoreUI.Commands.AccountSettingsCommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error sign up: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -79,7 +79,7 @@ namespace BookStoreUI.Commands.AccountSettingsCommands
 
         public void Dispose()
         {
-            _regiserAccountViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _regiserAccountViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
 }

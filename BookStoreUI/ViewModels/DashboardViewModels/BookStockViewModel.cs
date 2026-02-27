@@ -1,6 +1,5 @@
-﻿using BLL.Services.BookStockServices;
+﻿using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
-using BookStoreUI.Interfaces;
 using BookStoreUI.Navigation.Services.DashboardNavigationServices;
 using BookStoreUI.Navigation.Services.MainNavigationServices;
 using BookStoreUI.Stores;
@@ -13,10 +12,9 @@ using System.Windows.Input;
 
 namespace BookStoreUI.ViewModels.DashboardViewModels
 {
-    public class BookStockViewModel : RightPanelBase, ISubscribable
+    public class BookStockViewModel : ViewModelsBase
     {
         private readonly SelectedItemStore _selectedItemStore;
-        private readonly IBookStockService _bookStockService;
 
         private ProductViewModel _selectedBook => _selectedItemStore.SelectedProduct;
         public ProductViewModel SelectedBook
@@ -32,38 +30,36 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
         public ICommand SellBookCommand { get; }
         public ICommand AddBookDelayCommand { get; }
 
-        public BookStockViewModel(IDashboardNavigationService<ChangeBookStockViewModel> navigateToAddBookStockService,
-            IDashboardNavigationService<ChangeBookStockViewModel> navigateToWriteOffBookService,
+        public BookStockViewModel(IDashboardNavigationService<ChangeBookStockViewModel> navigateToChangeBookStockService,
             IDashboardNavigationService<SellBookViewModel> navigateToSellBookService,
             IMainNavigationService<AddDelayViewModel> navigateToAddDelayService,
-            IBookStockService bookStockService,
+            IBookService bookService,
             SelectedItemStore selectedItemStore,
             ChangeBookStockControlContextStore changeBookStockControlContextStore,
             CurrentUserStore currentUserStore)
         {
             _selectedItemStore = selectedItemStore;
-            _bookStockService = bookStockService;
 
-            AddBookStockCommand = new AsyncRelayCommand(
-                async (object? s) =>
+            AddBookStockCommand = new RelayCommand(
+                (object? s) =>
                 {
                     changeBookStockControlContextStore.ChangeBookStockControlContextObject.IsWriteOffMode = false;
-                    await navigateToAddBookStockService.Navigate();
+                    navigateToChangeBookStockService.Navigate();
                 },
                 (object? s) => SelectedBook != null);
 
-            WriteOffBookCommand = new AsyncRelayCommand(
-                async (object? s) =>
+            WriteOffBookCommand = new RelayCommand(
+                (object? s) =>
                 {
                     changeBookStockControlContextStore.ChangeBookStockControlContextObject.IsWriteOffMode = true;
-                    await navigateToWriteOffBookService.Navigate();
+                    navigateToChangeBookStockService.Navigate();
                 },
                 (object? s) => currentUserStore.CurrentUser.IsAdmin && SelectedBook != null);
 
-            SellBookCommand = new AsyncRelayCommand(
-                async (object? s) =>
+            SellBookCommand = new RelayCommand(
+                (object? s) =>
                 {
-                    await navigateToSellBookService.Navigate();
+                    navigateToSellBookService.Navigate();
                 },
                 (object? s) => SelectedBook != null);
 
@@ -73,27 +69,19 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
                     navigateToAddDelayService.Navigate();
                 },
                 (object? s) => SelectedBook != null);
-        }
 
-        public void SubscribeToEvents()
-        {
-            _selectedItemStore.PropertyChanged += OnSelectedItemStorePropertyChanged;
+            selectedItemStore.PropertyChanged += OnSelectedItemStorePropertyChanged;
         }
 
         private void OnSelectedItemStorePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedItemStore.SelectedProduct))
             {
-                (AddBookStockCommand as AsyncRelayCommand)?.OnCanExecutedChanged();
-                (WriteOffBookCommand as AsyncRelayCommand)?.OnCanExecutedChanged();
-                (SellBookCommand as AsyncRelayCommand)?.OnCanExecutedChanged();
+                (AddBookStockCommand as RelayCommand)?.OnCanExecutedChanged();
+                (WriteOffBookCommand as RelayCommand)?.OnCanExecutedChanged();
+                (SellBookCommand as RelayCommand)?.OnCanExecutedChanged();
                 (AddBookDelayCommand as RelayCommand)?.OnCanExecutedChanged();
             }
-        }
-
-        public override async Task SetCollectionToDefault()
-        {
-            await _bookStockService.SetToDefault();
         }
 
         public override void Dispose()

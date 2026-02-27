@@ -20,8 +20,7 @@ namespace BLL.DTOEntityMappers
             return new UserSignInInfoDTO()
             {
                 Id = userSignInInfo.Id,
-                Login = userSignInInfo.Login,
-                Password = userSignInInfo.Password
+                Login = userSignInInfo.Login
             };
         }
     }

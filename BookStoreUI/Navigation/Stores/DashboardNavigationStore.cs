@@ -4,8 +4,8 @@ namespace BookStoreUI.Navigation.Stores
 {
     public class DashboardNavigationStore
     {
-        private RightPanelBase _currentRightPanel;
-        public RightPanelBase CurrentRightPanel
+        private ViewModelsBase _currentRightPanel;
+        public ViewModelsBase CurrentRightPanel
         {
             get
             {

@@ -51,20 +51,6 @@ namespace BookStoreUI.ViewModels.CollectionViewModels
             }
         }
 
-        private string _password;
-        public string Password
-        {
-            get
-            {
-                return _password;
-            }
-            set
-            {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
-            }
-        }
-
         private string _name;
         public string Name
         {

@@ -1,6 +1,7 @@
 ﻿using BLL.Services.DelayBookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.ViewModels.OtherViewModels;
+using System.Windows;
 
 namespace BookStoreUI.Commands.DashboardCommands.BookStockCommands
 {
@@ -33,7 +34,15 @@ namespace BookStoreUI.Commands.DashboardCommands.BookStockCommands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _delayBookService.RemoveDelayAsync(_delayBooksViewModel.SelectedDelay.ProductId);
+            try
+            {
+                await _delayBookService.RemoveDelayAsync(_delayBooksViewModel.SelectedDelay.ProductId);
+                await _delayBooksViewModel.RefreshAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error deleting delay: {ex.Message}", "Error", MessageBoxButton.OK);
+            }
         }
 
         public void Dispose()

@@ -14,11 +14,15 @@ namespace DLL.Repositories.AccountSettingsRepositories
 
         public async Task<User> SignIn(UserSignInInfo userSignInInfo)
         {
-            User? tempUser = await FindUserBySignInInfo(userSignInInfo);
+            User? tempUser = await FindUserByLogin(userSignInInfo.Login);
 
             if (tempUser != null)
             {
-                return tempUser;
+                if (BCrypt.Net.BCrypt.Verify(userSignInInfo.Password, tempUser.SignInInfo.Password))
+                {
+                    return tempUser;
+                }
+                throw new Exception("Incorrect password!");
             }
             else
             {
@@ -28,14 +32,14 @@ namespace DLL.Repositories.AccountSettingsRepositories
 
         public async Task<User> SignUp(User user)
         {
-            IEnumerable<User> tempUsers = await GetAllAsync();
+            User? tempUser = await FindUserByLogin(user.SignInInfo.Login);
 
-            if (tempUsers.Where(u => u.SignInInfo.Login == user.SignInInfo.Login).Count() == 0)
+            if (tempUser == null)
             {
-                await _bookStoreContext.Users.AddAsync(user);
+                user.SignInInfo.Password = BCrypt.Net.BCrypt.HashPassword(user.SignInInfo.Password);
+                _bookStoreContext.Users.Add(user);
                 await _bookStoreContext.SaveChangesAsync();
-
-                return await FindUserBySignInInfo(user.SignInInfo);
+                return user;
             }
             else
             {
@@ -45,7 +49,7 @@ namespace DLL.Repositories.AccountSettingsRepositories
 
         public async Task<User> ChangeLogin(User user, string newLogin)
         {
-            User? tempUser = await FindUserBySignInInfo(user.SignInInfo);
+            User? tempUser = await FindUserByLogin(user.SignInInfo.Login);
 
             if (tempUser != null)
             {
@@ -61,13 +65,13 @@ namespace DLL.Repositories.AccountSettingsRepositories
 
         public async Task<User> ChangePassword(User user, string inputPassword, string newPassword)
         {
-            User? tempUser = await FindUserBySignInInfo(user.SignInInfo);
+            User? tempUser = await FindUserByLogin(user.SignInInfo.Login);
 
             if (tempUser != null)
             {
-                if (tempUser.SignInInfo.Password == inputPassword)
+                if (BCrypt.Net.BCrypt.Verify(inputPassword, tempUser.SignInInfo.Password))
                 {
-                    tempUser.SignInInfo.Password = newPassword;
+                    tempUser.SignInInfo.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
                     await _bookStoreContext.SaveChangesAsync();
                     return tempUser;
                 }
@@ -82,19 +86,12 @@ namespace DLL.Repositories.AccountSettingsRepositories
             }
         }
 
-        private async Task<IEnumerable<User>> GetAllAsync()
-        {
-            return await Task.Run(() => _bookStoreContext.Users
-                .Include(u => u.SignInInfo)
-                .Include(u => u.UserFullName));
-        }
-
-        private async Task<User?> FindUserBySignInInfo(UserSignInInfo userSignInInfo)
+        private async Task<User?> FindUserByLogin(string login)
         {
             return await _bookStoreContext.Users
                 .Include(u => u.SignInInfo)
                 .Include(u => u.UserFullName)
-                .FirstOrDefaultAsync(u => u.SignInInfo.Login == userSignInInfo.Login && u.SignInInfo.Password == userSignInInfo.Password);
+                .FirstOrDefaultAsync(u => u.SignInInfo.Login == login);
         }
     }
 }

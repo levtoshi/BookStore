@@ -69,10 +69,6 @@ namespace BookStoreUI.ViewModels.AccountViewModels
                 {
                     AddError("New password cannot be empty.", nameof(NewPassword));
                 }
-                if (!HasNewPasswordVerified)
-                {
-                    AddError("New password and new password again fields must be equal.", nameof(NewPassword));
-                }
                 if (!HasNewPasswordDifferentFromOld)
                 {
                     AddError("New password must be different from old.", nameof(NewPassword));

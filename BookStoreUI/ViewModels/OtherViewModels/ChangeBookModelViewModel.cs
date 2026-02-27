@@ -1,4 +1,4 @@
-﻿using BLL.Services.BookModelServices;
+﻿using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Commands.DashboardCommands.BookModelCommands;
 using BookStoreUI.Navigation.Services.MainNavigationServices;
@@ -275,16 +275,16 @@ namespace BookStoreUI.ViewModels.OtherViewModels
         public bool HasErrors => _propertyNameToErrorsDictionary.Any();
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-
         public bool IsUpdateMode { get; }
 
         public ICommand GoToPreviousViewCommand { get; }
         public ICommand SubmitCommand { get; }
 
         public ChangeBookModelViewModel(IMainNavigationService<DashboardViewModel> navigationService,
-            IBookModelService bookModelService,
+            IBookService bookModelService,
             ChangeBookModelControlContextStore changeBookModelControlContextStore,
-            SelectedItemStore selectedItemStore)
+            SelectedItemStore selectedItemStore,
+            ProductsStore productsStore)
         {
             _propertyNameToErrorsDictionary = new Dictionary<string, List<string>>();
             IsUpdateMode = changeBookModelControlContextStore.ChangeBookModelControlContextObject.IsUpdateMode;
@@ -292,8 +292,8 @@ namespace BookStoreUI.ViewModels.OtherViewModels
             GoToPreviousViewCommand = new RelayCommand((object? s) => navigationService.Navigate());
 
             SubmitCommand = IsUpdateMode ?
-                new UpdateBookModelCommand(this, navigationService, bookModelService, selectedItemStore) :
-                new AddBookModelCommand(this, navigationService, bookModelService);
+                new UpdateBookModelCommand(this, navigationService, bookModelService, selectedItemStore, productsStore) :
+                new AddBookModelCommand(this, navigationService, bookModelService, productsStore);
 
             if (IsUpdateMode && selectedItemStore.SelectedProduct is not null)
             {

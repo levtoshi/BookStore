@@ -41,7 +41,7 @@
 
                     <Grid Visibility="{Binding HasErrorMessage, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
 
-                        <TextBlock Text="No reservations have been made." Visibility="{Binding HasDiscounts, Converter={StaticResource InverseBooleanToVisibilityConverter}}"></TextBlock>
+                        <TextBlock Text="No discounts have been made." Visibility="{Binding HasDiscounts, Converter={StaticResource InverseBooleanToVisibilityConverter}}"></TextBlock>
 
                         <ListView ItemsSource="{Binding Discounts}" SelectedItem="{Binding SelectedDiscount, Mode=TwoWay}" Visibility="{Binding HasDiscounts, Converter={StaticResource BooleanToVisibilityConverter}}" FontSize="16">
                             <ListView.Resources>

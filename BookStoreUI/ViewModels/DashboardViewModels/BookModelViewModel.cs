@@ -1,7 +1,7 @@
-﻿using BLL.Services.BookModelServices;
+﻿using BLL.DTOs;
+using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Commands.DashboardCommands.BookModelCommands;
-using BookStoreUI.Interfaces;
 using BookStoreUI.Navigation.Services.MainNavigationServices;
 using BookStoreUI.Stores;
 using BookStoreUI.Stores.ControlContextStores;
@@ -13,10 +13,10 @@ using System.Windows.Input;
 
 namespace BookStoreUI.ViewModels.DashboardViewModels
 {
-    public class BookModelViewModel : RightPanelBase, ISubscribable
+    public class BookModelViewModel : ViewModelsBase
     {
+        private readonly IBookService _bookService;
         private readonly SelectedItemStore _selectedItemStore;
-        private readonly IBookModelService _bookModelService;
 
         private ProductViewModel _selectedBook => _selectedItemStore.SelectedProduct;
         public ProductViewModel SelectedBook
@@ -35,13 +35,13 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
 
         public BookModelViewModel(IMainNavigationService<ChangeBookModelViewModel> navigateToChangeBookModelViewModel,
             IMainNavigationService<AddDiscountViewModel> navigateToAddDiscountViewModel,
-            IBookModelService bookModelService,
+            IBookService bookService,
             ChangeBookModelControlContextStore changeBookModelControlContextStore,
-            SelectedItemStore selectedItemStore)
+            SelectedItemStore selectedItemStore,
+            ProductsStore productsStore)
         {
             _selectedItemStore = selectedItemStore;
-
-            _bookModelService = bookModelService;
+            _bookService = bookService;
 
             AddNewBookCommand = new RelayCommand((object? s) =>
             {
@@ -57,7 +57,7 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
                 },
                 (object? s) => SelectedBook != null);
 
-            DeleteBookCommand = new DeleteBookModelCommand(this, _bookModelService, _selectedItemStore);
+            DeleteBookCommand = new DeleteBookModelCommand(_bookService, _selectedItemStore, productsStore);
 
             AddDiscountCommand = new RelayCommand(
                 (object? s) =>
@@ -65,15 +65,8 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
                     navigateToAddDiscountViewModel.Navigate();
                 },
                 (object? s) => SelectedBook != null);
-        }
 
-        public void SubscribeToEvents()
-        {
             _selectedItemStore.PropertyChanged += OnSelectedItemPropertyChanged;
-            if (DeleteBookCommand is ISubscribable subscribable)
-            {
-                subscribable.SubscribeToEvents();
-            }
         }
 
         private void OnSelectedItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -83,11 +76,6 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
                 (UpdateBookCommand as RelayCommand)?.OnCanExecutedChanged();
                 (AddDiscountCommand as RelayCommand)?.OnCanExecutedChanged();
             }
-        }
-
-        public override async Task SetCollectionToDefault()
-        {
-            await _bookModelService.SetToDefault();
         }
 
         public override void Dispose()

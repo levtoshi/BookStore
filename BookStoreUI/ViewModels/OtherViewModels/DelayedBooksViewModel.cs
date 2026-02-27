@@ -1,4 +1,4 @@
-﻿using BLL.Services.BookStoreProviderServices;
+﻿using BLL.DTOs;
 using BLL.Services.DelayBookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Commands.DashboardCommands.BookStockCommands;
@@ -15,7 +15,7 @@ namespace BookStoreUI.ViewModels.OtherViewModels
 {
     public class DelayedBooksViewModel : ViewModelsBase
     {
-        private readonly IBookStoreProviderService _bookStoreProviderService;
+        private readonly IDelayBookService _delayBookService;
 
         private DelayViewModel _selectedDelay;
         public DelayViewModel SelectedDelay
@@ -31,20 +31,7 @@ namespace BookStoreUI.ViewModels.OtherViewModels
             }
         }
 
-        private ObservableCollection<DelayViewModel> _delays;
-        public ObservableCollection<DelayViewModel> Delays
-        {
-            get
-            {
-                return _delays;
-            }
-            set
-            {
-                _delays = value;
-                OnPropertyChanged(nameof(Delays));
-                OnPropertyChanged(nameof(HasDelays));
-            }
-        }
+        public ObservableCollection<DelayViewModel> Delays { get; } = new ObservableCollection<DelayViewModel>();
 
         public bool HasDelays => (Delays is not null) ? Delays.Any() : false;
 
@@ -84,43 +71,42 @@ namespace BookStoreUI.ViewModels.OtherViewModels
         public ICommand DeleteDelayCommand { get; }
 
         public DelayedBooksViewModel(IMainNavigationService<DashboardViewModel> navigationService,
-            IDelayBookService delayBookService,
-            IBookStoreProviderService bookStoreProviderService)
+            IDelayBookService delayBookService)
         {
-            _ = delayBookService.SetToDefault();
-
+            _delayBookService = delayBookService;
             GoToPreviousViewCommand = new RelayCommand((object? s) => navigationService.Navigate());
-
             DeleteDelayCommand = new DeleteDelayCommand(this, delayBookService);
 
-            _bookStoreProviderService = bookStoreProviderService;
-            _bookStoreProviderService.UpdateStarted += OnCollectionUpdateStarted;
-            _bookStoreProviderService.CollectionChanged += OnCollectionChanged;
+            // refresh
+            _ = RefreshAsync();
         }
 
-        private async Task LoadDelays()
+        public async Task RefreshAsync()
         {
-            try
+            if (!IsLoading)
             {
-                Delays = new ObservableCollection<DelayViewModel>((await _bookStoreProviderService.GetAllProductsAsync()).Select(p => DelayMapper.ToViewModel(p)));
+                IsLoading = true;
+                ErrorMessage = string.Empty;
+
+                try
+                {
+                    var delays = (await _delayBookService.GetAllDelaysAsync()).Select(d => DelayMapper.ToViewModel(d));
+                    Delays.Clear();
+                    foreach (var delay in delays)
+                    {
+                        Delays.Add(delay);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = $"Failed to load delays. {ex.Message}";
+                }
+                finally
+                {
+                    IsLoading = false;
+                    OnPropertyChanged(nameof(HasDelays));
+                }
             }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"Failed to load books. {ex.Message}";
-            }
-
-            IsLoading = false;
-        }
-
-        private void OnCollectionUpdateStarted(object? sender, EventArgs e)
-        {
-            ErrorMessage = String.Empty;
-            IsLoading = true;
-        }
-
-        public async void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            await LoadDelays();
         }
 
         public override void Dispose()
@@ -129,9 +115,6 @@ namespace BookStoreUI.ViewModels.OtherViewModels
             {
                 disposable.Dispose();
             }
-
-            _bookStoreProviderService.UpdateStarted -= OnCollectionUpdateStarted;
-            _bookStoreProviderService.CollectionChanged -= OnCollectionChanged;
 
             base.Dispose();
         }

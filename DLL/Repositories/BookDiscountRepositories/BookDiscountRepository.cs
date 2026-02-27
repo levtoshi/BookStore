@@ -1,31 +1,36 @@
 ﻿using DLL.Entities;
-using DLL.Interfaces;
-using DLL.Stores;
+using Microsoft.EntityFrameworkCore;
 
 namespace DLL.Repositories.BookDiscountRepositories
 {
-    public class BookDiscountRepository : IBookDiscountRepository, ISetCollectionToDefaultRepository
+    public class BookDiscountRepository : IBookDiscountRepository
     {
         private readonly BookStoreContext _bookStoreContext;
-        private readonly ProductsStore _productsStore;
 
-        public BookDiscountRepository(BookStoreContext bookStoreContext,
-            ProductsStore productsStore)
+        public BookDiscountRepository(BookStoreContext bookStoreContext)
         {
             _bookStoreContext = bookStoreContext;
-
-            _productsStore = productsStore;
         }
 
-        public async Task SetToDefault()
+        public async Task<List<Product>> GetAllDiscountsAsync()
         {
-            _productsStore.FilterFunc = p => p.Discount != null;
-            await _productsStore.SetToDefault();
+            return await _bookStoreContext.Products
+                .AsNoTracking()
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Author)
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Producer)
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Genre)
+                    .Include(p => p.Discount)
+                .Where(p => p.Discount != null)
+                .ToListAsync();
         }
 
         public async Task AddDiscountAsync(int productId, Discount discount)
         {
-            Product? tempProduct = await _productsStore.FindElementAsync(productId);
+            Product? tempProduct = await _bookStoreContext.Products.FirstOrDefaultAsync(p => p.Id == productId);
+
             if (tempProduct != null)
             {
                 if (tempProduct.Discount == null)
@@ -38,15 +43,26 @@ namespace DLL.Repositories.BookDiscountRepositories
                 tempProduct.Discount.EndDate = discount.EndDate;
                 await _bookStoreContext.SaveChangesAsync();
             }
+            else
+            {
+                throw new Exception("There is no such product in database!");
+            }
         }
 
         public async Task RemoveDiscountAsync(int productId)
         {
-            Product? tempProduct = await _productsStore.FindElementAsync(productId);
+            Product? tempProduct = await _bookStoreContext.Products
+                .Include(p => p.Discount)
+                .FirstOrDefaultAsync(p => p.Id == productId);
+
             if (tempProduct != null)
             {
                 tempProduct.Discount = null;
                 await _bookStoreContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("There is no such product in database!");
             }
         }
     }

@@ -2,8 +2,8 @@
 
 namespace BookStoreUI.Navigation.Services.DashboardNavigationServices
 {
-    public interface IDashboardNavigationService<TViewModel> where TViewModel : RightPanelBase
+    public interface IDashboardNavigationService<TViewModel> where TViewModel : ViewModelsBase
     {
-        Task Navigate();
+        void Navigate();
     }
 }

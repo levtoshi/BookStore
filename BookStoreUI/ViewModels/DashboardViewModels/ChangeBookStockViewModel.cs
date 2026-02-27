@@ -1,6 +1,5 @@
-﻿using BLL.Services.BookStockServices;
+﻿using BLL.Services.BookServices;
 using BookStoreUI.Commands.DashboardCommands.BookStockCommands;
-using BookStoreUI.Interfaces;
 using BookStoreUI.Navigation.Services.DashboardNavigationServices;
 using BookStoreUI.Stores;
 using BookStoreUI.Stores.ControlContextStores;
@@ -11,7 +10,7 @@ using System.Windows.Input;
 
 namespace BookStoreUI.ViewModels.DashboardViewModels
 {
-    public class ChangeBookStockViewModel : RightPanelBase, INotifyDataErrorInfo, ISubscribable
+    public class ChangeBookStockViewModel : ViewModelsBase, INotifyDataErrorInfo
     {
         private int _amount;
         public int Amount
@@ -47,25 +46,18 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
         public ICommand SubmitCommand { get; set; }
 
         public ChangeBookStockViewModel(IDashboardNavigationService<BookStockViewModel> navigateToBookStockViewModelService,
-            IBookStockService bookStockService,
+            IBookService bookService,
             ChangeBookStockControlContextStore changeBookStockControlContextStore,
-            SelectedItemStore selectedItemStore)
+            SelectedItemStore selectedItemStore,
+            ProductsStore productsStore)
         {
             IsWriteOffMode = changeBookStockControlContextStore.ChangeBookStockControlContextObject.IsWriteOffMode;
 
             _propertyNameToErrorsDictionary = new Dictionary<string, List<string>>();
 
             SubmitCommand = IsWriteOffMode ?
-                new WriteOffBookCommand(this, navigateToBookStockViewModelService, bookStockService, selectedItemStore.SelectedProduct) :
-                new AddBookStockCommand(this, navigateToBookStockViewModelService, bookStockService, selectedItemStore.SelectedProduct);
-        }
-
-        public void SubscribeToEvents()
-        {
-            if (SubmitCommand is ISubscribable subscribable)
-            {
-                subscribable.SubscribeToEvents();
-            }
+                new WriteOffBookCommand(this, navigateToBookStockViewModelService, bookService, selectedItemStore.SelectedProduct, productsStore) :
+                new AddBookStockCommand(this, navigateToBookStockViewModelService, bookService, selectedItemStore.SelectedProduct, productsStore);
         }
 
         public IEnumerable GetErrors(string propertyName)

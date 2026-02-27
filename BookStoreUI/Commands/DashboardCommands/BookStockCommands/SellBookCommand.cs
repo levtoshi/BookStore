@@ -1,4 +1,4 @@
-﻿using BLL.Services.BookStockServices;
+﻿using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Navigation.Services.DashboardNavigationServices;
 using BookStoreUI.Stores;
@@ -13,20 +13,23 @@ namespace BookStoreUI.Commands.DashboardCommands.BookStockCommands
     {
         private readonly SellBookViewModel _sellBookViewModel;
         private readonly IDashboardNavigationService<BookStockViewModel> _navigationService;
-        private readonly IBookStockService _bookStockService;
+        private readonly IBookService _bookService;
         private readonly SelectedItemStore _selectedItemStore;
+        private readonly ProductsStore _productsStore;
 
         public SellBookCommand(SellBookViewModel sellBookViewModel,
             IDashboardNavigationService<BookStockViewModel> navigationService,
-            IBookStockService bookStockService,
-            SelectedItemStore selectedItemStore)
+            IBookService bookService,
+            SelectedItemStore selectedItemStore,
+            ProductsStore productsStore)
         {
             _sellBookViewModel = sellBookViewModel;
             _sellBookViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
             _navigationService = navigationService;
-            _bookStockService = bookStockService;
+            _bookService = bookService;
             _selectedItemStore = selectedItemStore;
+            _productsStore = productsStore;
         }
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -46,12 +49,13 @@ namespace BookStoreUI.Commands.DashboardCommands.BookStockCommands
         {
             try
             {
-                await _bookStockService.SellBookAsync(_selectedItemStore.SelectedProduct.ProductId, _sellBookViewModel.Amount, _sellBookViewModel.SaleDate);
-                await _navigationService.Navigate();
+                await _bookService.SellBookAsync(_selectedItemStore.SelectedProduct.ProductId, _sellBookViewModel.Amount, _sellBookViewModel.SaleDate);
+                await _productsStore.RefreshAsync();
+                _navigationService.Navigate();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error selling books: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -4,7 +4,7 @@ namespace DLL.Repositories.DelayBookRepositories
 {
     public interface IDelayBookRepository
     {
-        Task SetToDefault();
+        Task<List<Product>> GetAllDelaysAsync();
         Task AddDelayAsync(int productId, Delay delay);
         Task RemoveDelayAsync(int productId);
     }

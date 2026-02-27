@@ -1,6 +1,8 @@
 ﻿using BLL.Services.BookDiscountServices;
 using BookStoreUI.Commands.BaseCommands;
+using BookStoreUI.Stores;
 using BookStoreUI.ViewModels.OtherViewModels;
+using System.Windows;
 
 namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
 {
@@ -8,17 +10,14 @@ namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
     {
         private readonly BookDiscountsViewModel _booksDiscountsViewModel;
         private readonly IBookDiscountService _bookDiscountService;
-        //private readonly IBookStoreProviderService _bookStoreDiscountService;
 
         public DeleteDiscountCommand(BookDiscountsViewModel booksDiscountsViewModel,
-            IBookDiscountService bookDiscountService)//,
-                                                     //IBookStoreProviderService bookStoreProviderService)
+            IBookDiscountService bookDiscountService)
         {
             _booksDiscountsViewModel = booksDiscountsViewModel;
             _booksDiscountsViewModel.PropertyChanged += OnViewModelPropertyChanged;
 
             _bookDiscountService = bookDiscountService;
-            //_bookStoreDiscountService = bookStoreProviderService;
         }
 
         private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -36,7 +35,15 @@ namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _bookDiscountService.RemoveDiscountAsync(_booksDiscountsViewModel.SelectedDiscount.ProductId);
+            try
+            {
+                await _bookDiscountService.RemoveDiscountAsync(_booksDiscountsViewModel.SelectedDiscount.ProductId);
+                await _booksDiscountsViewModel.RefreshAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error deleting discount: {ex.Message}", "Error", MessageBoxButton.OK);
+            }
         }
 
         public void Dispose()

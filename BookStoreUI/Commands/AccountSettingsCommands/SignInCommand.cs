@@ -53,7 +53,7 @@ namespace BookStoreUI.Commands.AccountSettingsCommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error sign in: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -64,7 +64,7 @@ namespace BookStoreUI.Commands.AccountSettingsCommands
 
         public void Dispose()
         {
-            _loginViewModel.PropertyChanged += OnViewModelPropertyChanged;
+            _loginViewModel.PropertyChanged -= OnViewModelPropertyChanged;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using BLL.Services.BookDiscountServices;
-using BLL.Services.BookStoreProviderServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Commands.DashboardCommands.BookModelCommands;
 using BookStoreUI.Navigation.Services.MainNavigationServices;
@@ -7,6 +6,7 @@ using BookStoreUI.ViewModelDTOMappers;
 using BookStoreUI.ViewModels.BaseViewModels;
 using BookStoreUI.ViewModels.CollectionViewModels;
 using BookStoreUI.ViewModels.DashboardViewModels;
+using DLL.Entities;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
@@ -15,7 +15,7 @@ namespace BookStoreUI.ViewModels.OtherViewModels
 {
     public class BookDiscountsViewModel : ViewModelsBase
     {
-        private readonly IBookStoreProviderService _bookStoreProviderService;
+        private readonly IBookDiscountService _bookDiscountService;
 
         private DiscountViewModel _selectedDiscount;
         public DiscountViewModel SelectedDiscount
@@ -31,20 +31,7 @@ namespace BookStoreUI.ViewModels.OtherViewModels
             }
         }
 
-        private ObservableCollection<DiscountViewModel> _discounts;
-        public ObservableCollection<DiscountViewModel> Discounts
-        {
-            get
-            {
-                return _discounts;
-            }
-            set
-            {
-                _discounts = value;
-                OnPropertyChanged(nameof(Discounts));
-                OnPropertyChanged(nameof(HasDiscounts));
-            }
-        }
+        public ObservableCollection<DiscountViewModel> Discounts { get; } = new ObservableCollection<DiscountViewModel>();
 
         public bool HasDiscounts => (Discounts is not null) ? Discounts.Any() : false;
 
@@ -84,43 +71,43 @@ namespace BookStoreUI.ViewModels.OtherViewModels
         public ICommand DeleteDiscountCommand { get; }
 
         public BookDiscountsViewModel(IMainNavigationService<DashboardViewModel> navigationService,
-            IBookDiscountService discountBookService,
-            IBookStoreProviderService bookStoreProviderService)
+            IBookDiscountService discountBookService)
         {
-            _ = discountBookService.SetToDefault();
+            _bookDiscountService = discountBookService;
 
             GoToPreviousViewCommand = new RelayCommand((object? s) => navigationService.Navigate());
-
             DeleteDiscountCommand = new DeleteDiscountCommand(this, discountBookService);
 
-            _bookStoreProviderService = bookStoreProviderService;
-            _bookStoreProviderService.UpdateStarted += OnCollectionUpdateStarted;
-            _bookStoreProviderService.CollectionChanged += OnCollectionChanged;
+            // refresh
+            _ = RefreshAsync();
         }
 
-        private async Task LoadDiscounts()
+        public async Task RefreshAsync()
         {
-            try
+            if (!IsLoading)
             {
-                Discounts = new ObservableCollection<DiscountViewModel>((await _bookStoreProviderService.GetAllProductsAsync()).Select(p => DiscountMapper.ToViewModel(p)));
+                IsLoading = true;
+                ErrorMessage = string.Empty;
+
+                try
+                {
+                    var discounts = (await _bookDiscountService.GetAllDiscountsAsync()).Select(d => DiscountMapper.ToViewModel(d));
+                    Discounts.Clear();
+                    foreach (var discount in discounts)
+                    {
+                        Discounts.Add(discount);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = $"Failed to load discounts. {ex.Message}";
+                }
+                finally
+                {
+                    IsLoading = false;
+                    OnPropertyChanged(nameof(HasDiscounts));
+                }
             }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"Failed to load books. {ex.Message}";
-            }
-
-            IsLoading = false;
-        }
-
-        private void OnCollectionUpdateStarted(object? sender, EventArgs e)
-        {
-            ErrorMessage = String.Empty;
-            IsLoading = true;
-        }
-
-        public async void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            await LoadDiscounts();
         }
 
         public override void Dispose()
@@ -129,8 +116,6 @@ namespace BookStoreUI.ViewModels.OtherViewModels
             {
                 disposable.Dispose();
             }
-            _bookStoreProviderService.UpdateStarted -= OnCollectionUpdateStarted;
-            _bookStoreProviderService.CollectionChanged -= OnCollectionChanged;
             base.Dispose();
         }
     }

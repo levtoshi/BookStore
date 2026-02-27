@@ -1,5 +1,4 @@
-﻿using BLL.DTOs;
-using BLL.Services.BookStockServices;
+﻿using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Commands.DashboardCommands.BookStockCommands;
 using BookStoreUI.Navigation.Services.DashboardNavigationServices;
@@ -11,7 +10,7 @@ using System.Windows.Input;
 
 namespace BookStoreUI.ViewModels.DashboardViewModels
 {
-    public class SellBookViewModel : RightPanelBase, INotifyDataErrorInfo
+    public class SellBookViewModel : ViewModelsBase, INotifyDataErrorInfo
     {
         private int _amount;
         public int Amount
@@ -68,14 +67,15 @@ namespace BookStoreUI.ViewModels.DashboardViewModels
         public ICommand SetSaleDateToNowCommand { get; }
 
         public SellBookViewModel(IDashboardNavigationService<BookStockViewModel> navigateToBookStockViewModelService,
-            IBookStockService bookStockService,
-            SelectedItemStore selectedItemStore)
+            IBookService bookService,
+            SelectedItemStore selectedItemStore,
+            ProductsStore productsStore)
         {
             _propertyNameToErrorsDictionary = new Dictionary<string, List<string>>();
             
             SaleDate = DateTime.Now;
 
-            SubmitCommand = new SellBookCommand(this, navigateToBookStockViewModelService, bookStockService, selectedItemStore);
+            SubmitCommand = new SellBookCommand(this, navigateToBookStockViewModelService, bookService, selectedItemStore, productsStore);
             SetSaleDateToNowCommand = new RelayCommand((object? s) => SaleDate = DateTime.Now);
         }
 

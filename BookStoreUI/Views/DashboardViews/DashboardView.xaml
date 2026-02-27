@@ -23,16 +23,14 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Content="Book Model" Command="{Binding NavigateToBookModelView}"></Button>
             <Button Grid.Column="1" Content="Book Stock" Command="{Binding NavigateToBookStockView}"></Button>
-            <Button Grid.Column="2" Content="Search" Command="{Binding NavigateToSearchBookView}"></Button>
-            <Button Grid.Column="3" Content="Statistic" Command="{Binding NavigateToBookStatisticView}"></Button>
-            <Button Grid.Column="4" Content="Discounts" Command="{Binding NavigateToBookDiscountsView}"></Button>
-            <Button Grid.Column="5" Content="Delayed" Command="{Binding NavigateToDelayedBooksView}"></Button>
-            <Button Grid.Column="6" Content="Account" Command="{Binding NavigateToAccountSettingsView}"></Button>
+            <Button Grid.Column="2" Content="Search" Command="{Binding NavigateToFilterBookView}"></Button>
+            <Button Grid.Column="3" Content="Discounts" Command="{Binding NavigateToBookDiscountsView}"></Button>
+            <Button Grid.Column="4" Content="Delayed" Command="{Binding NavigateToDelayedBooksView}"></Button>
+            <Button Grid.Column="5" Content="Account" Command="{Binding NavigateToAccountSettingsView}"></Button>
         </Grid>
 
         <Grid Grid.Row="1">

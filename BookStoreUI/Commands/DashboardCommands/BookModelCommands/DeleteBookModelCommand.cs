@@ -1,32 +1,28 @@
-﻿using BLL.Services.BookModelServices;
+﻿using BLL.DTOs;
+using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
-using BookStoreUI.Interfaces;
 using BookStoreUI.Stores;
 using BookStoreUI.ViewModelDTOMappers;
 using BookStoreUI.ViewModels.DashboardViewModels;
+using DLL.Entities;
 using System.ComponentModel;
 using System.Windows;
 
 namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
 {
-    public class DeleteBookModelCommand : AsyncCommandBase, IDisposable, ISubscribable
+    public class DeleteBookModelCommand : AsyncCommandBase, IDisposable
     {
-        private readonly BookModelViewModel _bookModelViewModel;
-        private readonly IBookModelService _bookModelService;
+        private readonly IBookService _bookService;
         private readonly SelectedItemStore _selectedItemStore;
+        private readonly ProductsStore _productsStore;
 
-        public DeleteBookModelCommand(BookModelViewModel bookModelViewModel,
-            IBookModelService bookModelService,
-            SelectedItemStore selectedItemStore)
+        public DeleteBookModelCommand(IBookService bookService,
+            SelectedItemStore selectedItemStore,
+            ProductsStore productsStore)
         {
-            _bookModelViewModel = bookModelViewModel;
-
-            _bookModelService = bookModelService;
+            _bookService = bookService;
             _selectedItemStore = selectedItemStore;
-        }
-
-        public void SubscribeToEvents()
-        {
+            _productsStore = productsStore;
             _selectedItemStore.PropertyChanged += OnSelectedItemPropertyChanged;
         }
 
@@ -42,11 +38,12 @@ namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
         {
             try
             {
-                await _bookModelService.DeleteBookModelAsync(ProductMapper.ToDTO(_selectedItemStore.SelectedProduct));
+                await _bookService.DeleteBookModelAsync(ProductMapper.ToDTO(_selectedItemStore.SelectedProduct));
+                await _productsStore.RefreshAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error deleting book model: {ex.Message}", "Error", MessageBoxButton.OK);
             }
         }
 

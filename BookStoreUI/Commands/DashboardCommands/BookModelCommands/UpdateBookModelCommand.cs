@@ -1,10 +1,11 @@
 ﻿using BLL.DTOs;
-using BLL.Services.BookModelServices;
+using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Navigation.Services.MainNavigationServices;
 using BookStoreUI.Stores;
 using BookStoreUI.ViewModels.DashboardViewModels;
 using BookStoreUI.ViewModels.OtherViewModels;
+using System.Windows;
 
 namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
 {
@@ -12,51 +13,65 @@ namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands
     {
         private readonly ChangeBookModelViewModel _changeBookModelViewModel;
         private readonly IMainNavigationService<DashboardViewModel> _navigateToDashboardViewModelService;
-        private readonly IBookModelService _bookModelService;
+        private readonly IBookService _bookService;
         private readonly SelectedItemStore _selectedItemStore;
+        private readonly ProductsStore _productsStore;
 
         public UpdateBookModelCommand(ChangeBookModelViewModel changeBookModelViewModel,
             IMainNavigationService<DashboardViewModel> navigateToDashboardViewModelService,
-            IBookModelService bookModelService,
-            SelectedItemStore selectedItemStore)
+            IBookService bookService,
+            SelectedItemStore selectedItemStore,
+            ProductsStore productsStore)
         {
             _changeBookModelViewModel = changeBookModelViewModel;
             _navigateToDashboardViewModelService = navigateToDashboardViewModelService;
-            _bookModelService = bookModelService;
+            _bookService = bookService;
             _selectedItemStore = selectedItemStore;
+            _productsStore = productsStore;
         }
 
         public override async Task ExecuteAsync(object parameter)
         {
-            await _bookModelService.UpdateBookModelAsync(new ProductDTO()
+            string error = string.Empty;
+
+            try
             {
-                Id = _selectedItemStore.SelectedProduct.ProductId,
-                Amount = _changeBookModelViewModel.AmountInStock,
-                Cost = _changeBookModelViewModel.Cost,
-                Price = _changeBookModelViewModel.Price,
-                Book = new BookDTO()
+                await _bookService.UpdateBookModelAsync(new ProductDTO()
                 {
-                    Name = _changeBookModelViewModel.BookName,
-                    Author = new FullNameDTO()
+                    Id = _selectedItemStore.SelectedProduct.ProductId,
+                    Amount = _changeBookModelViewModel.AmountInStock,
+                    Cost = _changeBookModelViewModel.Cost,
+                    Price = _changeBookModelViewModel.Price,
+                    Book = new BookDTO()
                     {
-                        Name = _changeBookModelViewModel.AuthorName,
-                        MiddleName = _changeBookModelViewModel.AuthorMiddleName,
-                        LastName = _changeBookModelViewModel.AuthorLastName
+                        Name = _changeBookModelViewModel.BookName,
+                        Author = new FullNameDTO()
+                        {
+                            Name = _changeBookModelViewModel.AuthorName,
+                            MiddleName = _changeBookModelViewModel.AuthorMiddleName,
+                            LastName = _changeBookModelViewModel.AuthorLastName
+                        },
+                        Producer = new ProducerDTO()
+                        {
+                            Name = _changeBookModelViewModel.ProducerName,
+                        },
+                        Genre = new GenreDTO()
+                        {
+                            Name = _changeBookModelViewModel.Genre,
+                        },
+                        Year = _changeBookModelViewModel.Year,
+                        IsContinuation = _changeBookModelViewModel.IsContinuation,
+                        PageAmount = _changeBookModelViewModel.AmountOfPages
                     },
-                    Producer = new ProducerDTO()
-                    {
-                        Name = _changeBookModelViewModel.ProducerName,
-                    },
-                    Genre = new GenreDTO()
-                    {
-                        Name = _changeBookModelViewModel.Genre,
-                    },
-                    Year = _changeBookModelViewModel.Year,
-                    IsContinuation = _changeBookModelViewModel.IsContinuation,
-                    PageAmount = _changeBookModelViewModel.AmountOfPages
-                },
-            });
-            _navigateToDashboardViewModelService.Navigate();
+                });
+
+                await _productsStore.RefreshAsync();
+                _navigateToDashboardViewModelService.Navigate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error updating book model: {ex.Message}", "Error", MessageBoxButton.OK);
+            }
         }
 
         public override bool CanExecute(object parameter)

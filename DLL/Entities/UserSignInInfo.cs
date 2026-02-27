@@ -12,7 +12,7 @@ namespace DLL.Entities
         public string Login { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string Password { get; set; }
     }
 }
