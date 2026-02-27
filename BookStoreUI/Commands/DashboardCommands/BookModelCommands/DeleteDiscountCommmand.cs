@@ -1,6 +1,5 @@
 ﻿using BLL.Services.BookDiscountServices;
 using BookStoreUI.Commands.BaseCommands;
-using BookStoreUI.Stores;
 using BookStoreUI.ViewModels.OtherViewModels;
 using System.Windows;
 

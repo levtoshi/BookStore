@@ -6,9 +6,7 @@ using BookStoreUI.ViewModelDTOMappers;
 using BookStoreUI.ViewModels.BaseViewModels;
 using BookStoreUI.ViewModels.CollectionViewModels;
 using BookStoreUI.ViewModels.DashboardViewModels;
-using DLL.Entities;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Windows.Input;
 
 namespace BookStoreUI.ViewModels.OtherViewModels

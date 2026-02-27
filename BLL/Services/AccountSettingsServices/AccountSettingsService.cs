@@ -1,6 +1,5 @@
 ﻿using BLL.DTOEntityMappers;
 using BLL.DTOs;
-using DLL.Entities;
 using DLL.Repositories.AccountSettingsRepositories;
 
 namespace BLL.Services.AccountSettingsServices

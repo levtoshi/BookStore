@@ -1,12 +1,8 @@
 ﻿using BLL.HostBuildersBLL;
 using BookStoreUI.HostBuilders;
-using BookStoreUI.Navigation.Services.DashboardNavigationServices;
 using BookStoreUI.Navigation.Services.MainNavigationServices;
-using BookStoreUI.Stores;
 using BookStoreUI.ViewModels.AccountViewModels;
 using BookStoreUI.ViewModels.BaseViewModels;
-using BookStoreUI.ViewModels.CollectionViewModels;
-using BookStoreUI.ViewModels.DashboardViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Configuration;

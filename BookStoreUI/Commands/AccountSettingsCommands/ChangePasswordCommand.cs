@@ -4,7 +4,6 @@ using BookStoreUI.Navigation.Services.MainNavigationServices;
 using BookStoreUI.Stores;
 using BookStoreUI.ViewModelDTOMappers;
 using BookStoreUI.ViewModels.AccountViewModels;
-using BookStoreUI.ViewModels.DashboardViewModels;
 using System.Windows;
 
 namespace BookStoreUI.Commands.AccountSettingsCommands

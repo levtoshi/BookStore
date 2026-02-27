@@ -1,5 +1,4 @@
-﻿using BLL.DTOs;
-using BLL.Services.BookServices;
+﻿using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Commands.DashboardCommands.BookModelCommands;
 using BookStoreUI.Navigation.Services.MainNavigationServices;

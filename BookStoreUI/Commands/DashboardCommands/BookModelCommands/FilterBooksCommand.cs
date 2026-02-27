@@ -1,16 +1,8 @@
 ﻿using BLL.DTOs;
-using BLL.Services.BookServices;
 using BLL.Services.FilterBookServices;
 using BookStoreUI.Commands.BaseCommands;
-using BookStoreUI.Navigation.Services.MainNavigationServices;
 using BookStoreUI.Stores;
 using BookStoreUI.ViewModels.DashboardViewModels;
-using BookStoreUI.ViewModels.OtherViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BookStoreUI.Commands.DashboardCommands.BookModelCommands

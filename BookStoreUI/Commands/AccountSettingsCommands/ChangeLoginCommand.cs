@@ -3,12 +3,6 @@ using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Stores;
 using BookStoreUI.ViewModelDTOMappers;
 using BookStoreUI.ViewModels.AccountViewModels;
-using BookStoreUI.ViewModels.OtherViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BookStoreUI.Commands.AccountSettingsCommands

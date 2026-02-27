@@ -2,7 +2,6 @@
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Navigation.Services.DashboardNavigationServices;
 using BookStoreUI.Stores;
-using BookStoreUI.ViewModels.CollectionViewModels;
 using BookStoreUI.ViewModels.DashboardViewModels;
 using System.ComponentModel;
 using System.Windows;

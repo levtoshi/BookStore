@@ -1,10 +1,7 @@
-﻿using BLL.DTOs;
-using BLL.Services.BookServices;
+﻿using BLL.Services.BookServices;
 using BookStoreUI.Commands.BaseCommands;
 using BookStoreUI.Stores;
 using BookStoreUI.ViewModelDTOMappers;
-using BookStoreUI.ViewModels.DashboardViewModels;
-using DLL.Entities;
 using System.ComponentModel;
 using System.Windows;
 

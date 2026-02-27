@@ -1,7 +1,5 @@
 ﻿using BLL.DTOEntityMappers;
 using BLL.DTOs;
-using DLL.Entities;
-using DLL.Models;
 using DLL.Repositories.FilterBookRepositories;
 
 namespace BLL.Services.FilterBookServices

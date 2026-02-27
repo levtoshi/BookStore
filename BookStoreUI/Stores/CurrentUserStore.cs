@@ -1,5 +1,4 @@
-﻿using BLL.DTOs;
-using BookStoreUI.ViewModels.CollectionViewModels;
+﻿using BookStoreUI.ViewModels.CollectionViewModels;
 using System.ComponentModel;
 
 namespace BookStoreUI.Stores

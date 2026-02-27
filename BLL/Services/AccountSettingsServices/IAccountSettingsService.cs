@@ -1,5 +1,4 @@
 ﻿using BLL.DTOs;
-using DLL.Entities;
 
 namespace BLL.Services.AccountSettingsServices
 {
