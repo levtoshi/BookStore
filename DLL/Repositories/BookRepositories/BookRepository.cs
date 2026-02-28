@@ -38,18 +38,38 @@ namespace DLL.Repositories.BookRepositories
 
         public async Task<Product> UpdateBookModelAsync(Product product)
         {
-            var trackedEntity = _bookStoreContext.Products
-                .Local
-                .FirstOrDefault(p => p.Id == product.Id);
-
-            if (trackedEntity != null)
+            if (product != null)
             {
-                _bookStoreContext.Entry(trackedEntity).State = EntityState.Detached;
-            }
+                Product? tempProduct = await _bookStoreContext.Products
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Author)
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Producer)
+                    .Include(p => p.Book)
+                        .ThenInclude(b => b.Genre)
+                    .FirstOrDefaultAsync(p => p.Id == product.Id);
+                if (tempProduct != null)
+                {
+                    tempProduct.Book.Name = product.Book.Name;
+                    tempProduct.Book.Author.Name = product.Book.Author.Name;
+                    tempProduct.Book.Author.MiddleName = product.Book.Author.MiddleName;
+                    tempProduct.Book.Author.LastName = product.Book.Author.LastName;
+                    tempProduct.Book.Producer.Name = product.Book.Producer.Name;
+                    tempProduct.Book.PageAmount = product.Book.PageAmount;
+                    tempProduct.Book.Genre.Name = product.Book.Genre.Name;
+                    tempProduct.Book.Year = product.Book.Year;
+                    tempProduct.Book.IsContinuation = product.Book.IsContinuation;
 
-            _bookStoreContext.Update(product);
-            await _bookStoreContext.SaveChangesAsync();
-            return product;
+                    tempProduct.Amount = product.Amount;
+                    tempProduct.Cost = product.Cost;
+                    tempProduct.Price = product.Price;
+
+                    await _bookStoreContext.SaveChangesAsync();
+                    return tempProduct;
+                }
+                throw new Exception("There is no such product in database!");
+            }
+            throw new Exception("Product is null!");
         }
 
         public async Task DeleteBookModelAsync(Product product)

@@ -58,9 +58,9 @@
                         <TextBlock Text="No reservations found." Visibility="{Binding HasBooks, Converter={StaticResource InverseBooleanToVisibilityConverter}}"></TextBlock>
 
                         <ListView ItemsSource="{Binding Books}"
-          SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
-          Visibility="{Binding HasBooks, Converter={StaticResource BooleanToVisibilityConverter}}"
-          FontSize="16">
+                            SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
+                            Visibility="{Binding HasBooks, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            FontSize="16">
                             <ListView.Resources>
                                 <Style TargetType="GridViewColumnHeader">
                                     <Setter Property="IsHitTestVisible" Value="False"></Setter>
@@ -78,16 +78,16 @@
                             </ListView.Resources>
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                                    <GridViewColumn Header="Author Name" DisplayMemberBinding="{Binding AuthorFullName}"/>
-                                    <GridViewColumn Header="Producer" DisplayMemberBinding="{Binding ProducerName}"/>
-                                    <GridViewColumn Header="Pages" DisplayMemberBinding="{Binding PagesAmount}"/>
-                                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Genre}"/>
-                                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Year}"/>
-                                    <GridViewColumn Header="Continuation" DisplayMemberBinding="{Binding IsContinuation}"/>
-                                    <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding AmountInStock}"/>
-                                    <GridViewColumn Header="Cost" DisplayMemberBinding="{Binding Cost}"/>
-                                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}"/>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                                    <GridViewColumn Header="Author Name" DisplayMemberBinding="{Binding AuthorFullName}" Width="Auto"/>
+                                    <GridViewColumn Header="Producer" DisplayMemberBinding="{Binding ProducerName}" Width="Auto"/>
+                                    <GridViewColumn Header="Pages" DisplayMemberBinding="{Binding PagesAmount}" Width="Auto"/>
+                                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Genre}" Width="Auto"/>
+                                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Year}" Width="Auto"/>
+                                    <GridViewColumn Header="Continuation" DisplayMemberBinding="{Binding IsContinuation}" Width="Auto"/>
+                                    <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding AmountInStock}" Width="Auto"/>
+                                    <GridViewColumn Header="Cost" DisplayMemberBinding="{Binding Cost}" Width="Auto"/>
+                                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="Auto"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
